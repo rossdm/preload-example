@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Preload Navigation Demo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      @view-transition { navigation: auto; }
+      ::view-transition-group(navbar) { animation-duration: 0s; }
+
+      .shell-nav-btn { transition: background 0.15s; }
+      .shell-nav-btn:hover { background: rgba(0, 0, 0, 0.04); }
+      .shell-nav-btn[data-active="true"] { background: #1565c0; color: #fff; }
+      .shell-nav-btn[data-active="true"]:hover { background: #0d47a1; }
+    </style>
+    <script type="speculationrules">
+    {
+      "prerender": [
+        {
+          "where": { "href_matches": ["/dashboard", "/reports", "/settings", "/users"] },
+          "eagerness": "moderate"
+        }
+      ]
+    }
+    </script>
+  </head>
+  <body>
+    <div id="root">
+      <!-- Static navbar shell: visible instantly before JS loads, replaced by React -->
+      <div
+        id="static-navbar"
+        style="
+          view-transition-name: navbar;
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: 64px;
+          background: #ffffff;
+          border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+          z-index: 1100;
+          display: flex;
+          align-items: center;
+          padding: 0 24px;
+          box-sizing: border-box;
+          font-family: 'Inter', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+        "
+      >
+        <span
+          style="
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1565c0;
+            margin-right: 32px;
+            user-select: none;
+          "
+        >PreloadApp</span>
+        <nav style="display: flex; gap: 4px;">
+          <a href="/dashboard" data-nav="/dashboard" class="shell-nav-btn" style="display:inline-flex;align-items:center;padding:6px 16px;border-radius:12px;font-size:0.875rem;font-weight:600;font-family:inherit;text-decoration:none;color:rgba(0,0,0,0.6);background:transparent">Dashboard</a>
+          <a href="/reports" data-nav="/reports" class="shell-nav-btn" style="display:inline-flex;align-items:center;padding:6px 16px;border-radius:12px;font-size:0.875rem;font-weight:600;font-family:inherit;text-decoration:none;color:rgba(0,0,0,0.6);background:transparent">Reports</a>
+          <a href="/settings" data-nav="/settings" class="shell-nav-btn" style="display:inline-flex;align-items:center;padding:6px 16px;border-radius:12px;font-size:0.875rem;font-weight:600;font-family:inherit;text-decoration:none;color:rgba(0,0,0,0.6);background:transparent">Settings</a>
+          <a href="/users" data-nav="/users" class="shell-nav-btn" style="display:inline-flex;align-items:center;padding:6px 16px;border-radius:12px;font-size:0.875rem;font-weight:600;font-family:inherit;text-decoration:none;color:rgba(0,0,0,0.6);background:transparent">Users</a>
+        </nav>
+      </div>
+      <script>
+        (function () {
+          var p = window.location.pathname;
+          var links = document.querySelectorAll('.shell-nav-btn');
+          for (var i = 0; i < links.length; i++) {
+            if (p.indexOf(links[i].getAttribute('data-nav')) === 0) {
+              links[i].setAttribute('data-active', 'true');
+              links[i].style.background = '#1565c0';
+              links[i].style.color = '#fff';
+            }
+          }
+        })();
+      </script>
+    </div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
